@@ -1,7 +1,6 @@
 package domain;
 
-import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.*;
 
 public enum Calculator {
 
@@ -30,25 +29,25 @@ public enum Calculator {
         }
     };
 
-    private final String operand;
-    private static EnumMap<Calculator, String> CACHED;
+    private final String operator;
+    private static Map<String, Calculator> CACHED = new HashMap<>();
 
 
     abstract int calculate(int a, int b);
 
     static {
-        Arrays.stream(Calculator.values()).forEach(i -> CACHED.put(i, i.getOperand()));
+        Arrays.stream(Calculator.values()).forEach(i -> CACHED.put(i.getOperator(), i));
     }
 
-    Calculator(final String operand) {
-        this.operand = operand;
+    Calculator(final String operator) {
+        this.operator = operator;
     }
 
-    public int calculate(){
+    public static int calculate(List<Integer> number, List<String> operator){
         return 0;
     }
 
-    public String getOperand() {
-        return operand;
+    public String getOperator() {
+        return operator;
     }
 }
