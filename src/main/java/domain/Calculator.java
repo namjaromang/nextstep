@@ -1,7 +1,9 @@
 package domain;
 
+import domain.exception.UnsupportedOperatorTypeException;
+
 import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.List;
 
 public enum Calculator {
 
@@ -30,25 +32,37 @@ public enum Calculator {
         }
     };
 
-    private final String operand;
-    private static EnumMap<Calculator, String> CACHED;
+    private final String operator;
 
 
     abstract int calculate(int a, int b);
 
-    static {
-        Arrays.stream(Calculator.values()).forEach(i -> CACHED.put(i, i.getOperand()));
+
+    Calculator(final String operator) {
+        this.operator = operator;
     }
 
-    Calculator(final String operand) {
-        this.operand = operand;
+    public static int calculate(List<Integer> numbers, List<String> operators) {
+        int sum = 0;
+        for (int i = 0; i < numbers.size(); i++) {
+            if(i == 0) {
+                sum = numbers.get(i);
+            }
+            if (i <= operators.size() && i != 0) {
+                sum = findOperatorCalculator(operators.get(i - 1)).calculate(sum, numbers.get(i));
+            }
+        }
+        return sum;
     }
 
-    public int calculate(){
-        return 0;
+    private static Calculator findOperatorCalculator(String operator){
+        return Arrays.stream(Calculator.values())
+                .filter((i) -> i.getOperator().equals(operator))
+                .findFirst()
+                .orElseThrow(() -> new UnsupportedOperatorTypeException(operator));
     }
 
-    public String getOperand() {
-        return operand;
+    public String getOperator() {
+        return operator;
     }
 }

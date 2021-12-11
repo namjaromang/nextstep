@@ -1,17 +1,13 @@
 package interfaces;
 
-import application.CalculateService;
+import domain.Calculator;
 import interfaces.dto.CalculatorRequest;
+import interfaces.dto.CalculatorResponse;
 
 public class CalculateController {
 
-    private final CalculateService calculateService;
-
-    public CalculateController(CalculateService calculateService) {
-        this.calculateService = calculateService;
-    }
-
-    public void calculate(CalculatorRequest calculatorRequest) {
-        calculateService.calculate();
+    public CalculatorResponse calculate(CalculatorRequest calculatorRequest) {
+       int sum = Calculator.calculate(calculatorRequest.getNumbers(), calculatorRequest.getOperators());
+       return new CalculatorResponse(sum);
     }
 }
