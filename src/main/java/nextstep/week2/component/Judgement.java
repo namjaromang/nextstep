@@ -1,14 +1,13 @@
 package nextstep.week2.component;
 
-public class Judgement {
-
-  private final int strikeCount;
-  private final int ballCount;
-
-  public Judgement(int strikeCount, int ballCount) {
-    this.strikeCount = strikeCount;
-    this.ballCount = ballCount;
-  }
+/**
+ * 숫자 계산 결과 처리
+ * <pre>
+ *   - strike count 및 ball count
+ *   - 게임 종료 로직
+ * </pre>
+ */
+public record Judgement(int strikeCount, int ballCount) {
 
   public int getStrikeCount() {
     return this.strikeCount;

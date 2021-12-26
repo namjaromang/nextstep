@@ -1,45 +1,111 @@
 package nextstep.week2.component;
 
-import java.util.Random;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+/**
+ * 숫자야구 게임 관리 클래스
+ * <pre>
+ *   - 게임의 시작 / 종료 / 재시작 관리
+ *   - 게임 시작 시 정답 숫자 생성
+ * </pre>
+ */
 public class NumberBaseBall {
 
-  private final BaseBallCalculator calculator = new BaseBallCalculator();
+  private final Scanner scanner = new Scanner(System.in);
+  private final Referee referee = new Referee();
+  private final Deque<Integer> userInputs = new ArrayDeque<>();
+
   private Integer number;
-  private boolean win = false;
-  private int ballCount = 0;
+
   public NumberBaseBall() {
-    number = new Random().nextInt(100, 1000);
+    reset();
   }
 
   public void reset() {
-    this.win = false;
-    this.ballCount = 0;
-    this.number = new Random().nextInt(100, 1000);
+    this.number = NumberGenerator.generateNumber();
+    this.referee.reset();
+    this.userInputs.clear();
   }
 
-  public Integer getNumber() {
+  Integer getNumber() {
     return number;
   }
 
-  public Integer play() {
-    throw new UnsupportedOperationException();
+  public void play() {
+    while (!isGameEnd()) {
+      playInning();
+    }
   }
 
-  public Integer start() {
-    throw new UnsupportedOperationException();
+  private boolean isGameEnd() {
+    boolean end = false;
+    if (isWin()) {
+      end = askContinue();
+    }
+    return end;
   }
 
-  public Judgement judge(Integer number) {
-    ballCount++;
-    throw new UnsupportedOperationException();
+  private boolean askContinue() {
+    while (true) {
+      try {
+        System.out.print("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
+        String ask = scanner.nextLine();
+        return validateAsk(ask);
+      } catch (Exception ex) {
+        System.out.println(ex.getMessage());
+      }
+    }
+  }
+
+  public void playInning() {
+    int guess = readNumber();
+    referee.judge(number, guess);
+    referee.call();
+  }
+
+  public Integer readNumber() {
+    Integer input = null;
+    while (scanner.hasNextLine()) {
+      try {
+        System.out.print("숫자를 입력해 주세요 : ");
+        String inputString = scanner.nextLine();
+        userInputs.add(validateNumber(inputString));
+        input = userInputs.getLast();
+      } catch (Exception ex) {
+        System.out.println(ex.getMessage());
+      }
+    }
+    return input;
   }
 
   public boolean isWin() {
-    return win;
+    return referee.isOut();
   }
 
-  public boolean isGameOver() {
-    return ballCount > 10;
+  private int validateNumber(String number) throws Exception {
+    char[] numberArray = number.toCharArray();
+    Arrays.sort(numberArray);
+    String sorted = String.valueOf(numberArray);
+    Matcher redundantMather = Pattern.compile("(([1-9])\\2+)").matcher(sorted);
+    Matcher digitMatcher = Pattern.compile("^[1-9]{3}$").matcher(sorted);
+    if (redundantMather.find() || !digitMatcher.find()) {
+      throw new Exception("서로 다른 세자리 숫자만 입력 가능합니다.");
+    }
+    return Integer.parseInt(number);
+  }
+
+  private boolean validateAsk(String ask) throws Exception {
+    if ("1".equals(ask)) {
+      return true;
+    }
+    if ("2".equals(ask)) {
+      return false;
+    }
+    throw new Exception("1 또는 2만 입력 가능합니다.");
   }
 }
