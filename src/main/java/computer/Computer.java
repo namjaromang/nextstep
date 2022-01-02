@@ -63,6 +63,5 @@ public class Computer implements IComputer {
     return String.format("%d 스트라이트 %d 볼 %d 아웃", strike, ball, out);
   }
 
-
   //todo 만들고  나서보니 숫자야구게임의 시작과 종료관리를 위한로직이없었다..
 }
