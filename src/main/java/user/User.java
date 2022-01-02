@@ -10,8 +10,14 @@ public class User implements IUser {
    * @return
    */
   @Override
-  public Integer[] setUserNumber() {
+  public int[] setUserNumber() {
+    String userNumber;
+    int[] number = new int[3];
+
     Scanner scanner = new Scanner(System.in);
-    return null;
+    userNumber = scanner.nextLine();
+    //todo 스트링을 int[]로 어떻게할까?
+
+    return number;
   }
 }

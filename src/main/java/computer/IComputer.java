@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface IComputer {
 
-  abstract Set<Integer> getRandomNumber();
+  abstract int[] getRandomNumber();
 
-  abstract String getBallInfo();
+  abstract String getBallInfo(int[] userNumber, int[] randomNumber);
 }
